@@ -1,1 +1,2 @@
 streamlit_navigation_bar==3.3.0
+plotly.express
