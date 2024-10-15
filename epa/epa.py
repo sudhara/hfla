@@ -92,8 +92,8 @@ def load_epa():
 
 if __name__=='__main__':
     df, grp_df, grp_df1, grp_df2,df10 = load_epa()
-    with st.sidebar:
-        st.logo("hfla.png")
+#    with st.sidebar:
+#        st.logo("hfla.png")
 
     page = st_navbar(["Exploratory Data Analysis", "Documentation", "ML Models"])
     st.write(page)
