@@ -53,7 +53,7 @@ styles = {
     },
     "div": {
         "max-width": "32rem",
-        "margin": "175px 50px 75px 100px"
+        "margin": "25px 50px 75px 100px"
     },
     "span": {
         "border-radius": "0.5rem",
