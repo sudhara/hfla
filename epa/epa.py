@@ -53,7 +53,7 @@ st.markdown("""
 
 
 
-@st.cache_data
+@st.cache_resource
 def load_epa():
     response = requests.get("https://aqs.epa.gov/data/api/dailyData/byCounty?email=sudha.kirthi@gmail.com&key=cobaltcrane97&param=88101&bdate=20240101&edate=20240630&state=06&county=037")
     result =  json.loads(response.text)
