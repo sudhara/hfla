@@ -2,7 +2,11 @@ import streamlit as st
 from streamlit_navigation_bar import st_navbar
 
 styles = {
-"appview-container" "main" "block-container" : {
+"appview-container" : {
+        "padding-top": "100px"},
+"main" : {
+        "padding-top": "100px"},
+"block-container" : {
         "padding-top": "100px"}
 }
 
