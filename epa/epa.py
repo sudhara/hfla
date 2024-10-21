@@ -45,7 +45,7 @@ st.markdown("""
  </style>""", unsafe_allow_html=True)
 
 
-pages = ["Home","Exploratory Data Analysis", "Documentation", "ML Models"]
+pages = ["Home", "Exploratory Data Analysis", "Documentation", "ML Models"]
 
 styles = {
     "nav": {
@@ -126,7 +126,7 @@ def load_epa():
     return df, grp_df, grp_df1, grp_df2, df10
 
 
-st.header(page)
+#st.header(page)
 
 if page == "Home":
     st.write ("Welcome to the world of EPA")
