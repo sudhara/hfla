@@ -45,45 +45,9 @@ st.markdown("""
  </style>""", unsafe_allow_html=True)
 
 
-pages = ["Home", "Exploratory Data Analysis", "Documentation", "ML Models"]
-
-styles = {
-    "nav": {
-        "background-color": "#7BD192",
-    },
-    "div": {
-        "max-width": "32rem",
-        "margin": "75px 50px 75px 100px"
-    },
-    "span": {
-        "border-radius": "0.5rem",
-        "padding": "0.4375rem 0.625rem",
-        "margin": "0 0.125rem",
-    },
-    "active": {
-        "background-color": "rgba(255, 255, 255, 0.25)",
-    },
-    "hover": {
-        "background-color": "rgba(255, 255, 255, 0.35)",
-    },
-}
-
-options = {
-    "show_menu": True,
-    "show_sidebar": False,
-    "use_padding" : False
-}
-
-page = st_navbar(
-    pages,
-    options=options,
-    styles=styles
-)
 
 @st.cache_data
 def load_epa():
-    #response = requests.get("https://aqs.epa.gov/data/api/dailyData/byState?email=sudha.kirthi@gmail.com&key=cobaltcrane97&param=45201&bdate=20240101&edate=20240630&state=06")
-    #response = requests.get("https://aqs.epa.gov/data/api/transactionsQaAnnualPerformanceEvaluations/byCounty?email=sudha.kirthi@gmail.com&key=cobaltcrane97&param=44201&bdate=20230101&edate=20231231&state=06&county=011")
     response = requests.get("https://aqs.epa.gov/data/api/dailyData/byCounty?email=sudha.kirthi@gmail.com&key=cobaltcrane97&param=88101&bdate=20240101&edate=20240630&state=06&county=037")
     result =  json.loads(response.text)
     data = json.dumps(result['Data'])
@@ -114,7 +78,15 @@ def load_epa():
     data = json.dumps(result['Data'])
     df10 = pd.read_json(data)
 
+
+    response = requests.get("https://aqs.epa.gov/data/api/metaData/fieldsByService?email=test@aqs.api&key=test&service=sampleData")
+    result =  json.loads(response.text)
+    data = json.dumps(result['Data'])
+    meta = pd.read_json(data)
+
     df = pd.concat([df,df1,df2,df3,df4])
+    df = df.astype({"state_code": "category", "county_code":"category","site_number":"category","parameter_code":"category","method_code":"category","cbsa_code":"category"})
+    
     df['date_local_dt'] = (pd.to_datetime(df['date_local'])) 
     df['dt_local_year'] = df['date_local_dt'].dt.year
     df['dt_local_month'] = df['date_local_dt'].dt.month
@@ -123,16 +95,51 @@ def load_epa():
     grp_df = df.groupby(['city'])['aqi'].mean()
     grp_df1 = df.groupby(['date_local_dt'])['aqi'].mean()
     grp_df2 = df.groupby(['dt_local_year','city'])['aqi'].mean().to_frame()
-    return df, grp_df, grp_df1, grp_df2, df10
+    return df, grp_df, grp_df1, grp_df2, df10, meta
 
 
-#st.header(page)
 
-if page == "Home":
-    st.write ("Welcome to the world of EPA")
-   
-#documentation
-if page == "Documentation":
+######## main code ##################
+df, grp_df, grp_df1, grp_df2,df10, meta = load_epa()
+st.title("EPA Data - California:2020 - 2024")
+tabA, tabB, tabD, tabE, tabF, tabG = st.tabs(["Raw Data", "Summary","Grouped by Date", "BoxPlot","Summary Data", "Documentation"])
+    #raw data
+with tabA:
+    st.subheader("Raw Data from EPS site")
+    st.write(df)
+    
+#summary stats
+with tabB:
+    st.subheader("Summary")
+    st.dataframe(df.describe(include="all").T, use_container_width=True, height=700)
+    st.write(meta)
+
+#grouped chart by date
+with tabD:
+    st.subheader("AQI chart by Date")
+    st.line_chart(grp_df1)
+
+#box plot
+with tabE:
+    fig = px.box(
+            df,
+            x="city",
+            y="aqi",
+            color = 'dt_local_year',
+            notched = True,
+            title = "Box Plot by City for 2020 - 2024"
+        )
+    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+
+#summary data
+with tabF:
+    st.subheader("Summary Data")
+    st.write(df10)
+    df11 = df10.loc[df10.groupby(['metric_used','pollutant_standard'])['arithmetic_mean'].idxmax()][['metric_used','pollutant_standard','arithmetic_mean','observation_count','standard_deviation','units_of_measure','first_max_value','first_max_datetime']]
+    st.subheader("Maximum arithmetic mean Observation Data for year 2024")
+    st.write(df11)
+
+with tabG:
     d = {'Levels of Concern': ['Good','Moderate','Unhealthy for Sensitive Groups','Unhealthy','Very Unhealthy','Hazardous']
             , 'Values of Index': ['o to 50', '51 to 100', '101 to 150', '151 to 200','201 to 300','301 and higher']
             , 'Description': ['Air quality is satisfactory, and air pollution poses little or no risk.'
@@ -161,45 +168,3 @@ if page == "Documentation":
     st.markdown(multi2)
     st.dataframe(aqi_df)
 
-#machine learning models
-if page == "ML Models":
-    pg.models()
-
-if page == "Exploratory Data Analysis":
-    df, grp_df, grp_df1, grp_df2,df10 = load_epa()
-    st.title("EPA Data - California:2020 - 2024")
-    tabA, tabB, tabD, tabE, tabF = st.tabs(["Raw Data", "Summary","Grouped by Date", "BoxPlot","Summary Data"])
-    #raw data
-    with tabA:
-        st.subheader("Raw Data from EPS site")
-        st.write(df)
-
-    #summary stats
-    with tabB:
-        st.subheader("Summary")
-        st.dataframe(df.describe().T, use_container_width=True, height=700)
-
-    #grouped chart by date
-    with tabD:
-        st.subheader("AQI chart by Date")
-        st.line_chart(grp_df1)
-    
-    #box plot
-    with tabE:
-        fig = px.box(
-                df,
-                x="city",
-                y="aqi",
-                color = 'dt_local_year',
-                notched = True,
-                title = "Box Plot by City for 2020 - 2024"
-            )
-        st.plotly_chart(fig, theme="streamlit", use_container_width=True)
-
-    #summary data
-    with tabF:
-        st.subheader("Summary Data")
-        st.write(df10)
-        df11 = df10.loc[df10.groupby(['metric_used','pollutant_standard'])['arithmetic_mean'].idxmax()][['metric_used','pollutant_standard','arithmetic_mean','observation_count','standard_deviation','units_of_measure','first_max_value','first_max_datetime']]
-        st.subheader("Maximum arithmetic mean Observation Data for year 2024")
-        st.write(df11)
