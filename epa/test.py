@@ -6,5 +6,5 @@ def home():
 def document():
         print ("document")
         
-pg = st.navigation([st.Page("home"), st.Page("document")])
+pg = st.navigation([st.Page("home()"), st.Page("document()")])
 pg.run()
