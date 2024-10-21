@@ -9,8 +9,8 @@ st.markdown("""
 
 page = st_navbar(["Home", "Documentation", "Examples", "Community", "About"])
 
-if page == "Home"
+if page == "Home":
         st.write("Home")
-elif page == "Documentation"
+elif page == "Documentation":
         st.write("Documentation")
 st.write(page)
