@@ -1,13 +1,12 @@
 import streamlit as st
 from streamlit_navigation_bar import st_navbar
 
-st.markdown("""
-<style>
-.appview-container .main .block-container{{
-        padding-top: 100rem;    }}
-</style>""", unsafe_allow_html=True)
+styles = {
+"appview-container" "main" "block-container" : {
+        "padding-top": "100px"}
+}
 
-page = st_navbar(["Home", "Documentation", "Examples", "Community", "About"])
+page = st_navbar(["Home", "Documentation", "Examples", "Community", "About"], styles=styles)
 
 if page == "Home":
         st.write("Home")
