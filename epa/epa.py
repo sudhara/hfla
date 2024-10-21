@@ -30,6 +30,13 @@ st.markdown("""
     .stTabs [data-baseweb="tab-list"] p {
         font-size:1.2rem;  font-color:black
     }
+
+    .block-container {
+		padding-top: 1rem;
+		padding-bottom: 0rem;
+		padding-left: 5rem;
+		padding-right: 5rem;
+   }
     
     div[data-testid="stSidebarHeader"] > img, div[data-testid="collapsedControl"] > img {
       height: 5rem;
