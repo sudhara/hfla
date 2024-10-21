@@ -4,7 +4,7 @@ from streamlit_navigation_bar import st_navbar
 st.markdown("""
 <style>
 .appview-container .main .block-container{{
-        padding-top: 10rem;    }}
+        padding-top: 100rem;    }}
 </style>""", unsafe_allow_html=True)
 
 page = st_navbar(["Home", "Documentation", "Examples", "Community", "About"])
