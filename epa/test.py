@@ -8,4 +8,9 @@ st.markdown("""
 </style>""", unsafe_allow_html=True)
 
 page = st_navbar(["Home", "Documentation", "Examples", "Community", "About"])
+
+if page == "Home"
+        st.write("Home")
+elif page == "Documentation"
+        st.write("Documentation")
 st.write(page)
