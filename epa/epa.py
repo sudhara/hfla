@@ -7,7 +7,7 @@ import pydeck as pdk
 import altair as alt
 from streamlit_navigation_bar import st_navbar
 import plotly.express as px
-import pages as pg
+
 st.set_page_config(layout="wide",initial_sidebar_state="collapsed")
 
 st.markdown("""
